@@ -28,15 +28,25 @@ const calculateScores = (responses) => {
   // Combined Secondary Score
   const combinedSecondaryScore = responses.slice(23, 33).reduce((a, b) => a + b, 0) / 10;
 
-  // Determine risk level based on total BAT score
+  // Determine risk level based on Flemish BAT-23 cutoffs for Total-core
   let riskLevel;
-  if (totalBATScore < 2.5) {
+  if (totalBATScore >= 1.00 && totalBATScore <= 2.58) {
     riskLevel = 'green'; // No risk
-  } else if (totalBATScore < 3.5) {
+  } else if (totalBATScore >= 2.59 && totalBATScore <= 3.01) {
     riskLevel = 'orange'; // At risk
-  } else {
+  } else if (totalBATScore >= 3.02 && totalBATScore <= 5.00) {
     riskLevel = 'red'; // Very high risk
+  } else {
+    // Default to green if somehow out of range
+    riskLevel = 'green';
   }
+
+  // Get risk level for each dimension
+  const exhaustionRisk = getExhaustionRisk(exhaustionScore);
+  const mentalDistanceRisk = getMentalDistanceRisk(mentalDistanceScore);
+  const cognitiveRisk = getCognitiveRisk(cognitiveImpairmentScore);
+  const emotionalRisk = getEmotionalRisk(emotionalImpairmentScore);
+  const secondaryRisk = getSecondaryRisk(combinedSecondaryScore);
 
   return {
     exhaustionScore,
@@ -48,7 +58,48 @@ const calculateScores = (responses) => {
     psychosomaticComplaintsScore,
     combinedSecondaryScore,
     riskLevel,
+    exhaustionRisk,
+    mentalDistanceRisk,
+    cognitiveRisk,
+    emotionalRisk,
+    secondaryRisk,
   };
+};
+
+// Helper functions to determine risk level for each dimension based on Flemish cutoffs
+const getExhaustionRisk = (score) => {
+  if (score >= 1.00 && score <= 3.05) return 'green';
+  if (score >= 3.06 && score <= 3.30) return 'orange';
+  if (score >= 3.31 && score <= 5.00) return 'red';
+  return 'green';
+};
+
+const getMentalDistanceRisk = (score) => {
+  if (score >= 1.00 && score <= 2.49) return 'green';
+  if (score >= 2.50 && score <= 3.09) return 'orange';
+  if (score >= 3.10 && score <= 5.00) return 'red';
+  return 'green';
+};
+
+const getCognitiveRisk = (score) => {
+  if (score >= 1.00 && score <= 2.69) return 'green';
+  if (score >= 2.70 && score <= 3.09) return 'orange';
+  if (score >= 3.10 && score <= 5.00) return 'red';
+  return 'green';
+};
+
+const getEmotionalRisk = (score) => {
+  if (score >= 1.00 && score <= 2.09) return 'green';
+  if (score >= 2.10 && score <= 2.89) return 'orange';
+  if (score >= 2.90 && score <= 5.00) return 'red';
+  return 'green';
+};
+
+const getSecondaryRisk = (score) => {
+  if (score >= 1.00 && score <= 2.84) return 'green';
+  if (score >= 2.85 && score <= 3.34) return 'orange';
+  if (score >= 3.35 && score <= 5.00) return 'red';
+  return 'green';
 };
 
 // Submit BAT assessment

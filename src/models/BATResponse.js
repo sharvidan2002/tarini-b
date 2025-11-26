@@ -56,6 +56,27 @@ const batResponseSchema = new mongoose.Schema({
     enum: ['green', 'orange', 'red'],
     required: true,
   },
+  // Individual dimension risk levels
+  exhaustionRisk: {
+    type: String,
+    enum: ['green', 'orange', 'red'],
+  },
+  mentalDistanceRisk: {
+    type: String,
+    enum: ['green', 'orange', 'red'],
+  },
+  cognitiveRisk: {
+    type: String,
+    enum: ['green', 'orange', 'red'],
+  },
+  emotionalRisk: {
+    type: String,
+    enum: ['green', 'orange', 'red'],
+  },
+  secondaryRisk: {
+    type: String,
+    enum: ['green', 'orange', 'red'],
+  },
   timestamp: {
     type: Date,
     default: Date.now,
